@@ -9,7 +9,7 @@ int main(int argc, char* argv[]) // uso de argumentos para execucao no terminal
     system("color F");
 
     if(argc != 5){
-        printf("(uso:) <arq_entrada> <arq_saida> <pin_6> C(txt)/D(bin)\n");
+        printf("(uso:) <arq_entrada> <arq_saida> <pin_6> C/D\n");
         exit(1);
     }
 
