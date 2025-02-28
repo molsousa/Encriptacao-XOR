@@ -1,4 +1,4 @@
-# Encriptacao-XOR
+# Algoritmo de encriptação-XOR
 ## Encriptar arquivo de textos em qualquer caractere utilizando numerais.
 
 - A entrada deve ser feita pelo terminal.
@@ -7,12 +7,11 @@
 
 ## Para a entrada é necessário:
   - ### 1 - Inserir executável.
-  - ### 2 - Inserir arquivo de texto padrão.
-  - ### 3 - Inserir arquivo de saída binário.
+  - ### 2 - Inserir arquivo de texto padrão (em encriptação).
+  - ### 3 - Inserir arquivo de saída binário (em encriptação).
   - ### 4 - Inserir a chave de acesso.
   - ### 5 - Inserir comando de encriptar ou decriptar.
 
 - A chave de acesso suporta no máximo 6 numerais.
+
 - Para decriptar é necessário que tenha os mesmos numerais que usou para encriptar.
-
-
