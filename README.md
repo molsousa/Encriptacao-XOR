@@ -1,6 +1,8 @@
 # Algoritmo de encriptação-XOR
 ## Encriptar arquivo de textos em qualquer caractere utilizando numerais.
 
+- É necessário compilar os arquivos fonte e a biblioteca antes de utilizar o programa. 
+
 - A entrada deve ser feita pelo terminal.
 
 - A encriptação pode ser feita sobre qualquer símbolo que possibilite a leitura em um bloco de notas padrão.
