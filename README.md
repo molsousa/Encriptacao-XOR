@@ -7,6 +7,8 @@
 
 - A encriptação pode ser feita sobre qualquer símbolo que possibilite a leitura em um bloco de notas padrão.
 
+- Para encriptação foi utilizado o operador xor "^" para alteração de bits.
+
 ## Para a entrada é necessário:
   - ### 1 - Inserir executável.
   - ### 2 - Inserir arquivo de texto padrão (em encriptação).
