@@ -1,5 +1,5 @@
 # Encriptacao-XOR
-## Encriptar arquivo de textos usando qualquer caractere utilizando numerais.
+## Encriptar arquivo de textos em qualquer caractere utilizando numerais.
 
 - A entrada deve ser feita pelo terminal.
 
