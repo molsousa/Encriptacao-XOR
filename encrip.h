@@ -1,5 +1,6 @@
 #ifndef ENCRIP_H_
 #define ENCRIP_H_
+
 #define MAX 6
 
 // Funcao para encriptar o arquivo de texto
