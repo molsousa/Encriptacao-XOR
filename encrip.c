@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 
 #include "encrip.h"
@@ -9,37 +10,29 @@
 // Saida: arquivo de saida em binario encriptado
 // Pre-condicao: arquivo de texto, arquivo binario, valor inteiro
 // Pos-condicao: nenhuma
-void encriptar_arquivo(const char *arq_entrada, const char *arq_saida, const char *expressao)
+void encriptar(const char *arquivo_entrada, const char *arquivo_saida, const char *senha)
 {
-    FILE *fr = fopen(arq_entrada, "r");
-    FILE *fw = fopen(arq_saida, "wb"); // exportar arquivo binario
+    FILE *fr = fopen(arquivo_entrada, "r");
+    FILE *fw = fopen(arquivo_saida, "wb");
 
-    register int i; // uso de register agiliza as iteracoes (Turbo C)
-    unsigned int caractere, soma;
-    int exp_vetor[MAX];
-    int exp_numerica = atoi(expressao); // arquivo padrao aceita apenas numerais
-
-    if(!fr || !fw){
-        printf("Nao foi possivel abrir/escrever o arquivo\n");
-        exit(1);
+    int senha_vetor[MAX];
+    int senha_len = strlen(senha);
+    for(int i = 0; i < senha_len; i++){
+        senha_vetor[i] = senha[i] - '0'; // converte char para int
     }
 
-    importar_vetor(exp_vetor, exp_numerica);
-
-    soma = 0;
-
-    for(i = 0; i < MAX; i++){
-        // printf("%d\n", exp_vetor[i]); //[DEBUG]
-
-        while( (caractere = getc(fr)) != EOF ){
-            soma = soma + exp_vetor[i]; // expressao XOR para encriptar
-            caractere = soma ^ caractere;
-
-            putc(caractere, fw);
+    unsigned char byte;
+    while (fread(&byte, 1, 1, fr) == 1){
+        int soma = 0;
+        // encriptacao: XOR + adicao + rotacao
+        for (int i = 0; i < senha_len; i++){
+            soma += senha_vetor[i];
+            byte = (byte ^ soma) + soma;
+            byte = rotacionar_esquerda(byte, 3); // rotacao de 3 bits
         }
-        rewind(fr);
-        rewind(fw); // retorna ao inicio do arquivo para reescrever (se necessario)
+        fwrite(&byte, 1, 1, fw);
     }
+
     fclose(fr);
     fclose(fw);
 }
@@ -49,65 +42,56 @@ void encriptar_arquivo(const char *arq_entrada, const char *arq_saida, const cha
 // Saida: arquivo de saida em binario encriptado
 // Pre-condicao: arquivo binario, arquivo de texto, valor inteiro
 // Pos-condicao: nenhuma
-void decriptar_arquivo(const char *arq_entrada, const char *arq_saida, const char *expressao)
+void decriptar(const char *arquivo_entrada, const char *arquivo_saida, const char *senha)
 {
-    FILE *fr = fopen(arq_entrada, "rb"); // abrir arquivo binario
-    FILE *fw = fopen(arq_saida, "w");
+    FILE *fr = fopen(arquivo_entrada, "rb");
+    FILE *fw = fopen(arquivo_saida, "w");
 
-    register int i;
-    unsigned int caractere, soma;
-    int exp_vetor[MAX];
-    int exp_numerica = atoi(expressao); // arquivo padrao aceita apenas numerais
-
-    if(!fr || !fw){
-        printf("Nao foi possivel abrir/escrever o arquivo\n");
-        exit(1);
+    int senha_vetor[MAX];
+    int senha_len = strlen(senha);
+    for(int i = 0; i < senha_len; i++){
+        senha_vetor[i] = senha[i] - '0';
     }
+    unsigned char byte;
 
-    importar_vetor(exp_vetor, exp_numerica);
-
-    soma = 0;
-
-    for(i = 0; i < MAX; i++){
-        // printf("%d\n", exp_vetor[i]); //[DEBUG]
-
-        while( (caractere = getc(fr)) != EOF ){
-            soma = soma + exp_vetor[i]; // expressao XOR para desfazer encriptacao
-            caractere = soma ^ caractere;
-
-            putc(caractere, fw);
+    while(fread(&byte, 1, 1, fr) == 1){
+        int soma_total = 0;
+        // Pré-calcula a soma total para uso reverso
+        for(int i = 0; i < senha_len; i++){
+            soma_total += senha_vetor[i];
         }
-        rewind(fr);
-        rewind(fw); // retorna ao inicio do arquivo para reescrever (se necessario)
+
+        // decriptacao: rotacao reversa + subtracao + XOR
+        for(int i = senha_len - 1; i >= 0; i--){
+            byte = rotacionar_direita(byte, 3); // reverte rotacao
+            byte = (byte - soma_total) ^ soma_total;
+            soma_total -= senha_vetor[i];
+        }
+        fwrite(&byte, 1, 1, fw);
     }
+
     fclose(fr);
     fclose(fw);
 }
 
-// Funcao para receber a expressao numerica
-// Entrada: vetor de MAX posicoes e uma expressao numerica inteira
-// Saida: vetor de MAX posicoes com numeros de ate 1 unidade
-// Pre-condicao: vetor criado, expressao inserida
-// Pos-condicao: nenhuma
-void importar_vetor(int *v, int numeral)
+// Funcao para rotacionar bits a esquerda
+// Entrada: byte a ser rotacionado, numero de rotacao
+// Saida: valor rotacionado n vezes
+// Pre-condicao: valor a ser rotacionado e o byte
+// Pos-condicao: retorna o valor rotacionado
+unsigned char rotacionar_esquerda(unsigned char valor, int n)
 {
-    register int i;
-    int aux, n;
-    double divisor;
+    n = n % 8; // Garante que n está entre 0 e 7
+    return (valor << n) | (valor >> (8 - n));
+}
 
-    n = MAX-1;
-
-    for(i = 0; i < MAX; i++){
-        divisor = (double) pow(10, n);
-
-        aux = (int) (numeral / divisor);
-        // printf("v[%d] = %d\n", i, aux); //[DEBUG]
-
-        v[i] = aux;
-        numeral = numeral % ((int)divisor);
-
-        // printf("%d\n", v[i]); //[DEBUG]
-
-        n--;
-    }
+// Funcao para rotacionar bits a esquerda
+// Entrada: byte a ser rotacionado, numero de rotacao
+// Saida: valor rotacionado n vezes
+// Pre-condicao: valor a ser rotacionado e o byte
+// Pos-condicao: retorna o valor rotacionado
+unsigned char rotacionar_direita(unsigned char valor, int n)
+{
+    n = n % 8;
+    return ((valor >> n) | (valor << (8 - n))) & 0xFF;
 }
