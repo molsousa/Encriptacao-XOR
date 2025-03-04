@@ -18,8 +18,4 @@
 
 - A chave de acesso suporta no máximo 6 numerais.
 
-- Não recomendável usar 0 na chave, não traz efeito na encriptação.
-
 - Para decriptar é necessário que tenha os mesmos numerais que usou para encriptar.
-
-- Não recomendável usar um mesmo algarismo em sequência na chave de acesso (como 112345).
