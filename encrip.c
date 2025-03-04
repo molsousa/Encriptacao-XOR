@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 
 #include "encrip.h"
 
@@ -56,7 +55,7 @@ void decriptar(const char *arquivo_entrada, const char *arquivo_saida, const cha
 
     while(fread(&byte, 1, 1, fr) == 1){
         int soma_total = 0;
-        // Pré-calcula a soma total para uso reverso
+        // PrÃ©-calcula a soma total para uso reverso
         for(int i = 0; i < senha_len; i++){
             soma_total += senha_vetor[i];
         }
@@ -81,8 +80,8 @@ void decriptar(const char *arquivo_entrada, const char *arquivo_saida, const cha
 // Pos-condicao: retorna o valor rotacionado
 unsigned char rotacionar_esquerda(unsigned char valor, int n)
 {
-    n = n % 8; // Garante que n está entre 0 e 7
-    return (valor << n) | (valor >> (8 - n));
+    n = n % 8; // Garante que n esta entre 0 e 7
+    return(valor << n) | (valor >> (8 - n));
 }
 
 // Funcao para rotacionar bits a esquerda
@@ -93,5 +92,5 @@ unsigned char rotacionar_esquerda(unsigned char valor, int n)
 unsigned char rotacionar_direita(unsigned char valor, int n)
 {
     n = n % 8;
-    return ((valor >> n) | (valor << (8 - n))) & 0xFF;
+    return((valor >> n) | (valor << (8 - n))) & 0xFF;
 }
