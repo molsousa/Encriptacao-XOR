@@ -15,7 +15,7 @@ void encriptar_arquivo(const char *arq_entrada, const char *arq_saida, const cha
     FILE *fw = fopen(arq_saida, "wb"); // exportar arquivo binario
 
     register int i; // uso de register agiliza as iteracoes (Turbo C)
-    int caractere;
+    unsigned int caractere, soma;
     int exp_vetor[MAX];
     int exp_numerica = atoi(expressao); // arquivo padrao aceita apenas numerais
 
@@ -26,11 +26,14 @@ void encriptar_arquivo(const char *arq_entrada, const char *arq_saida, const cha
 
     importar_vetor(exp_vetor, exp_numerica);
 
+    soma = 0;
+
     for(i = 0; i < MAX; i++){
         // printf("%d\n", exp_vetor[i]); //[DEBUG]
 
         while( (caractere = getc(fr)) != EOF ){
-            caractere = caractere ^ exp_vetor[i]; // expressao XOR para encriptar
+            soma = soma + exp_vetor[i]; // expressao XOR para encriptar
+            caractere = soma ^ caractere;
 
             putc(caractere, fw);
         }
@@ -52,7 +55,7 @@ void decriptar_arquivo(const char *arq_entrada, const char *arq_saida, const cha
     FILE *fw = fopen(arq_saida, "w");
 
     register int i;
-    int caractere;
+    unsigned int caractere, soma;
     int exp_vetor[MAX];
     int exp_numerica = atoi(expressao); // arquivo padrao aceita apenas numerais
 
@@ -63,11 +66,14 @@ void decriptar_arquivo(const char *arq_entrada, const char *arq_saida, const cha
 
     importar_vetor(exp_vetor, exp_numerica);
 
+    soma = 0;
+
     for(i = 0; i < MAX; i++){
         // printf("%d\n", exp_vetor[i]); //[DEBUG]
 
         while( (caractere = getc(fr)) != EOF ){
-            caractere = caractere ^ exp_vetor[i]; // expressao XOR para desfazer encriptacao
+            soma = soma + exp_vetor[i]; // expressao XOR para desfazer encriptacao
+            caractere = soma ^ caractere;
 
             putc(caractere, fw);
         }
