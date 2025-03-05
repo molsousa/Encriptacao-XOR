@@ -8,14 +8,14 @@
 // Saida: arquivo de saida em binario encriptado
 // Pre-condicao: arquivo de texto, arquivo binario, valor inteiro
 // Pos-condicao: nenhuma
-void encriptar(const char *arquivo_entrada, const char *arquivo_saida, const char *senha);
+void encriptar_arquivo(const char* arquivo_entrada, const char* arquivo_saida, const char* expressao);
 
 // Funcao para decriptar arquivo de texto
 // Entrada: arquivo de entrada, arquivo de saida, expressao para encriptar (ate 6 valores)
 // Saida: arquivo de saida em binario encriptado
 // Pre-condicao: arquivo binario, arquivo de texto, valor inteiro
 // Pos-condicao: nenhuma
-void decriptar(const char *arq_entrada, const char *arq_saida, const char *expressao);
+void decriptar_arquivo(const char* arq_entrada, const char* arq_saida, const char* expressao);
 
 // Funcao para rotacionar bits a esquerda
 // Entrada: byte a ser rotacionado, numero de rotacao

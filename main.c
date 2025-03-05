@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) // uso de argumentos para execucao no terminal
         exit(1);
     }
 
-    if(strlen(argv[3]) > MAX){ //nao permitido expressao acima do valor maximo especificado
+    if( (strlen(argv[3]) == 0) || (strlen(argv[3])) > MAX ){ //nao permitido expressao acima do valor maximo especificado
         printf("Expressao invalida\n");
         exit(1);
     }

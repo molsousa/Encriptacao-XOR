@@ -9,23 +9,26 @@
 // Saida: arquivo de saida em binario encriptado
 // Pre-condicao: arquivo de texto, arquivo binario, valor inteiro
 // Pos-condicao: nenhuma
-void encriptar(const char *arquivo_entrada, const char *arquivo_saida, const char *senha)
+void encriptar_arquivo(const char* arquivo_entrada, const char* arquivo_saida, const char* expressao)
 {
-    FILE *fr = fopen(arquivo_entrada, "r");
-    FILE *fw = fopen(arquivo_saida, "wb");
+    FILE* fr = fopen(arquivo_entrada, "rb");
+    FILE* fw = fopen(arquivo_saida, "wb");
 
-    int senha_vetor[MAX];
-    int senha_len = strlen(senha);
-    for(int i = 0; i < senha_len; i++){
-        senha_vetor[i] = senha[i] - '0'; // converte char para int
+    int exp_vetor[MAX];
+    int comp_expressao = strlen(expressao);
+    int i;
+    unsigned char byte;
+
+    for(i = 0; i < comp_expressao; i++){
+        exp_vetor[i] = expressao[i] - '0'; // converte char para int
     }
 
-    unsigned char byte;
     while (fread(&byte, 1, 1, fr) == 1){
         int soma = 0;
+
         // encriptacao: XOR + adicao + rotacao
-        for (int i = 0; i < senha_len; i++){
-            soma += senha_vetor[i];
+        for (i = 0; i < comp_expressao; i++){
+            soma += exp_vetor[i];
             byte = (byte ^ soma) + soma;
             byte = rotacionar_esquerda(byte, 3); // rotacao de 3 bits
         }
@@ -41,30 +44,33 @@ void encriptar(const char *arquivo_entrada, const char *arquivo_saida, const cha
 // Saida: arquivo de saida em binario encriptado
 // Pre-condicao: arquivo binario, arquivo de texto, valor inteiro
 // Pos-condicao: nenhuma
-void decriptar(const char *arquivo_entrada, const char *arquivo_saida, const char *senha)
+void decriptar_arquivo(const char* arquivo_entrada, const char* arquivo_saida, const char* expressao)
 {
-    FILE *fr = fopen(arquivo_entrada, "rb");
-    FILE *fw = fopen(arquivo_saida, "w");
+    FILE* fr = fopen(arquivo_entrada, "rb");
+    FILE* fw = fopen(arquivo_saida, "wb");
 
-    int senha_vetor[MAX];
-    int senha_len = strlen(senha);
-    for(int i = 0; i < senha_len; i++){
-        senha_vetor[i] = senha[i] - '0';
-    }
+    int exp_vetor[MAX];
+    int comp_expressao = strlen(expressao);
+    int i;
     unsigned char byte;
+
+    for(i = 0; i < comp_expressao; i++){
+        exp_vetor[i] = expressao[i] - '0';
+    }
 
     while(fread(&byte, 1, 1, fr) == 1){
         int soma_total = 0;
+
         // Pré-calcula a soma total para uso reverso
-        for(int i = 0; i < senha_len; i++){
-            soma_total += senha_vetor[i];
+        for(i = 0; i < comp_expressao; i++){
+            soma_total += exp_vetor[i];
         }
 
         // decriptacao: rotacao reversa + subtracao + XOR
-        for(int i = senha_len - 1; i >= 0; i--){
+        for(i = comp_expressao - 1; i >= 0; i--){
             byte = rotacionar_direita(byte, 3); // reverte rotacao
             byte = (byte - soma_total) ^ soma_total;
-            soma_total -= senha_vetor[i];
+            soma_total -= exp_vetor[i];
         }
         fwrite(&byte, 1, 1, fw);
     }
@@ -80,7 +86,7 @@ void decriptar(const char *arquivo_entrada, const char *arquivo_saida, const cha
 // Pos-condicao: retorna o valor rotacionado
 unsigned char rotacionar_esquerda(unsigned char valor, int n)
 {
-    n = n % 8; // Garante que n esta entre 0 e 7
+    n = n % 8; // garante que n esta entre 0 e 7
     return(valor << n) | (valor >> (8 - n));
 }
 
@@ -91,6 +97,6 @@ unsigned char rotacionar_esquerda(unsigned char valor, int n)
 // Pos-condicao: retorna o valor rotacionado
 unsigned char rotacionar_direita(unsigned char valor, int n)
 {
-    n = n % 8;
+    n = n % 8; // garante que n esta entre 0 e 7
     return((valor >> n) | (valor << (8 - n))) & 0xFF;
 }
