@@ -3,7 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "encrip.h"
+#include "src/encrip.h"
 
 int main(int argc, char* argv[]) // uso de argumentos para execucao no terminal
 {
