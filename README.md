@@ -10,11 +10,11 @@
 - Para encriptação foi utilizado o operador xor "^" e rotação de bits.
 
 ## Para a entrada é necessário:
-  - ### 1 - Inserir executável.
-  - ### 2 - Inserir arquivo de texto padrão (em encriptação).
-  - ### 3 - Inserir arquivo de saída binário (em encriptação).
-  - ### 4 - Inserir a chave de acesso.
-  - ### 5 - Inserir comando de encriptar ou decriptar.
+    - 1 - Inserir executável.
+    - 2 - Inserir arquivo de texto padrão (em encriptação).
+    - 3 - Inserir arquivo de saída binário (em encriptação).
+    - 4 - Inserir a chave de acesso.
+    - 5 - Inserir comando de encriptar ou decriptar.
 
 - A chave de acesso suporta no máximo 6 numerais.
 
